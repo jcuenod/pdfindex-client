@@ -1,0 +1,5 @@
+export default {
+    REMOVE_ACCENTS: 1,
+    REMOVE_ALL_POINTING: 2,
+    TRANSLITERATE: 3
+}
