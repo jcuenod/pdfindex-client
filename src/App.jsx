@@ -13,18 +13,22 @@ const ZEBRA_COLORS = {
 let timer
 const debounce =
 	(callback, passthrough) =>
-	(...args) => {
-		if (!passthrough) {
-			try {
-				clearTimeout(timer)
-			} catch (e) {}
-			timer = setTimeout(() => {
-				debounce(callback, true)(...args)
-			}, 700)
-			return
+		(...args) => {
+			if (!passthrough) {
+				try {
+					clearTimeout(timer)
+				} catch (e) { }
+				timer = setTimeout(() => {
+					debounce(callback, true)(...args)
+				}, 700)
+				return
+			}
+			callback(...args)
 		}
-		callback(...args)
-	}
+const doOpen = ({ filename, page }) => () => {
+	console.log("opening", filename, page)
+	fetch("http://localhost:3000/open?filename=" + encodeURIComponent(filename) + "&page=" + encodeURIComponent(page))
+}
 let loadingState = 0
 const updateResults = (setResults, setLoading) => e => {
 	loadingState++
@@ -77,6 +81,21 @@ const App = () => {
 															"flex flex-row items-center p-2 " + zebra
 														}
 													>
+														<button
+															onClick={doOpen({ filename: name, page })}>
+															<svg
+																xmlns="http://www.w3.org/2000/svg"
+																xmlns:xlink="http://www.w3.org/1999/xlink"
+																aria-hidden="true"
+																role="img"
+																width="16"
+																height="16"
+																preserveAspectRatio="xMidYMid meet"
+																viewBox="0 0 50 50"
+															>
+																<path d="M38.288 10.297l1.414 1.415l-14.99 14.99l-1.414-1.414z" fill="currentColor" /><path d="M40 20h-2v-8h-8v-2h10z" fill="currentColor" /><path d="M35 38H15c-1.7 0-3-1.3-3-3V15c0-1.7 1.3-3 3-3h11v2H15c-.6 0-1 .4-1 1v20c0 .6.4 1 1 1h20c.6 0 1-.4 1-1V24h2v11c0 1.7-1.3 3-3 3z" fill="currentColor" />
+															</svg>
+														</button>
 														<div
 															dangerouslySetInnerHTML={{
 																__html: extractArray[index],
